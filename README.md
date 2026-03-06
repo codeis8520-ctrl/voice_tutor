@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 2026 AI Voice English Tutor MVP
 
-## Getting Started
+This is a production-ready AI Voice Tutoring platform built with Next.js 15, Vapi, Groq, and Supabase.
 
-First, run the development server:
+## 🚀 Key Features
+- **Ultra-Low Latency (<500ms)**: Direct WebRTC streaming from browser to AI (Groq + Cartesia).
+- **No Physical Phone Required**: Pure browser-based voice interaction (Microphone).
+- **Contextual Memory (RAG)**: Automatically injects past conversation context and grammar mistakes.
+- **Post-Call Analytics**: Full transcript, summary, and grammar correction stored in Supabase.
 
+## 🛠 Tech Stack
+- **Framework**: Next.js 15 (App Router)
+- **Voice Orchestration**: [Vapi](https://vapi.ai)
+- **LLM**: Groq (Llama 3.3 70B)
+- **TTS**: Cartesia (Sonic)
+- **Database**: Supabase (PostgreSQL)
+- **Telephony**: Twilio (connected via Vapi)
+
+## 📦 Setup Instructions
+
+### 1. Database Setup
+1. Create a new project on [Supabase](https://supabase.com).
+2. Go to the **SQL Editor** and run the contents of `./supabase/schema.sql`.
+3. Obtain your `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY`.
+
+### 2. Vapi & Voice Setup
+1. Create an account on [Vapi](https://vapi.ai).
+2. Go to **Phone Numbers** and import your Twilio number or buy one.
+3. Note your `VAPI_API_KEY` and the `VAPI_PHONE_NUMBER_ID`.
+4. (Optional) In Vapi Assistant settings, ensure you have an analysis prompt that returns structured JSON for grammar mistakes if you want automatic tracking.
+
+### 3. Environment Variables
+1. Copy `.env.example` to `.env.local`.
+2. Fill in the keys from Supabase and Vapi.
+
+### 4. Running the App
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📂 Project Structure
+- `/src/lib/vapi.ts`: Vapi server-side integration.
+- `/src/prompts/system-prompt.ts`: The 'Warm Tutor' persona definition.
+- `/src/app/api/call/outbound/route.ts`: API to trigger calls.
+- `/src/app/api/webhook/vapi/route.ts`: Post-call analytics processor.
+- `/src/app/page.tsx`: Premium dashboard UI.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 Post-Call Analysis Configuration
+To make the analytics work, configure your Vapi Assistant with an **Analysis Plan**:
+- **Structured Data Schema**: 
+  ```json
+  {
+    "grammar_errors": [
+      { "original": "string", "corrected": "string", "explanation": "string" }
+    ]
+  }
+  ```
+This will allow the webhook to automatically populate the `learner_mistakes` table.

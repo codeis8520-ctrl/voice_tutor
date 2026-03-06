@@ -45,20 +45,20 @@ export async function POST(req: Request) {
         // 4. Return Assistant DTO for Web SDK
         return NextResponse.json({
             model: {
-                provider: 'groq',
-                model: 'llama3-70b-8192',
+                provider: 'openai',
+                model: 'gpt-3.5-turbo',
                 messages: [{ role: 'system', content: systemPrompt }],
             },
             voice: {
-                provider: 'cartesia',
-                voiceId: 'a0e99855-b139-437e-a67f-27f9712b8443',
+                provider: 'eleven-labs',
+                voiceId: '21m00T838D341gdV932p', // Rachel (stable default)
             },
             transcriber: {
                 provider: 'deepgram',
                 model: 'nova-2',
                 language: 'en-US',
             },
-            firstMessage: `Hi ${profile?.full_name || 'there'}! I'm your English tutor. How are you?`,
+            firstMessage: `Hi there! I'm your English tutor. Let's start practicing.`,
         });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });

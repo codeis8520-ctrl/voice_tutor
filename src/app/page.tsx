@@ -18,9 +18,21 @@ export default function Home() {
     vapi.on('speech-start', () => setIsSpeaking(true));
     vapi.on('speech-end', () => setIsSpeaking(false));
     vapi.on('error', (e) => {
-      console.error(e);
+      console.error('Vapi Error Full Object:', e);
       setCallStatus('idle');
-      setMessage('Error: ' + e.message);
+
+      let errorDisplay = 'Unknown error';
+      if (typeof e === 'string') {
+        errorDisplay = e;
+      } else if (e.message) {
+        errorDisplay = e.message;
+      } else if (e.type === 'device-error') {
+        errorDisplay = 'Microphone access denied or not found. Please check permissions.';
+      } else if (e.type) {
+        errorDisplay = `Error Type: ${e.type}`;
+      }
+
+      setMessage(errorDisplay);
     });
 
     return () => {

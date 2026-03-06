@@ -43,24 +43,28 @@ export async function POST(req: Request) {
         );
 
         // 4. Return Assistant DTO for Web SDK
-        // This allows the frontend to start the call with this dynamic config
         return NextResponse.json({
+            name: 'AI English Tutor (Production)',
             model: {
                 provider: 'groq',
                 model: 'llama-3.3-70b-versatile',
                 messages: [{ role: 'system', content: systemPrompt }],
                 temperature: 0.7,
+                maxTokens: 500,
             },
             voice: {
                 provider: 'cartesia',
-                voiceId: 'a0e99855-b139-437e-a67f-27f9712b8443',
+                voiceId: 'a0e99855-b139-437e-a67f-27f9712b8443', // Susan in Cartesia
             },
             transcriber: {
                 provider: 'deepgram',
                 model: 'nova-2',
                 language: 'en-US',
             },
-            firstMessage: `Hi ${profile?.full_name || ''}! I'm ready to practice. How are you today?`,
+            firstMessage: `Hi ${profile?.full_name || 'there'}! I'm Antigravity, your English tutor. Ready to practice?`,
+            recordingEnabled: true,
+            interruptible: true,
+            fillerWordsEnabled: true,
         });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });

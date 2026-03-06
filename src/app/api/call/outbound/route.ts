@@ -4,12 +4,17 @@ import { createClient } from '@supabase/supabase-js';
 import { vapi, createOutboundCall } from '@/lib/vapi';
 import { SYSTEM_PROMPT } from '@/prompts/system-prompt';
 
-// Supabase Setup
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!; // Must use service role for backend
-const supabase = createClient(supabaseUrl, supabaseKey);
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
+        return NextResponse.json({ error: 'Supabase environment variables are missing.' }, { status: 500 });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
     try {
         const { profileId } = await req.json();
 

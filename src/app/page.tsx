@@ -56,9 +56,7 @@ export default function Home() {
       if (assistantConfig.error) throw new Error(assistantConfig.error);
 
       // 2. Start WebRTC session
-      // Vapi SDK expects the assistant object directly or an ID.
-      // We log the config for debugging in the browser console.
-      console.log('Starting Vapi with config:', assistantConfig);
+      console.log('Starting Vapi with assistant:', assistantConfig);
       await vapi.start(assistantConfig);
     } catch (err: any) {
       setCallStatus('idle');

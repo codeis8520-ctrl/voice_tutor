@@ -47,7 +47,7 @@ export async function POST(req: Request) {
             name: 'AI English Tutor (Production)',
             model: {
                 provider: 'groq',
-                model: 'llama-3.3-70b-versatile',
+                model: 'llama3-70b-8192',
                 messages: [{ role: 'system', content: systemPrompt }],
                 temperature: 0.7,
                 maxTokens: 500,

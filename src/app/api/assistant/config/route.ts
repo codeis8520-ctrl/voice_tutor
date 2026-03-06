@@ -44,27 +44,21 @@ export async function POST(req: Request) {
 
         // 4. Return Assistant DTO for Web SDK
         return NextResponse.json({
-            name: 'AI English Tutor (Production)',
             model: {
                 provider: 'groq',
                 model: 'llama3-70b-8192',
                 messages: [{ role: 'system', content: systemPrompt }],
-                temperature: 0.7,
-                maxTokens: 500,
             },
             voice: {
                 provider: 'cartesia',
-                voiceId: 'a0e99855-b139-437e-a67f-27f9712b8443', // Susan in Cartesia
+                voiceId: 'a0e99855-b139-437e-a67f-27f9712b8443',
             },
             transcriber: {
                 provider: 'deepgram',
                 model: 'nova-2',
                 language: 'en-US',
             },
-            firstMessage: `Hi ${profile?.full_name || 'there'}! I'm Antigravity, your English tutor. Ready to practice?`,
-            recordingEnabled: true,
-            interruptible: true,
-            fillerWordsEnabled: true,
+            firstMessage: `Hi ${profile?.full_name || 'there'}! I'm your English tutor. How are you?`,
         });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
